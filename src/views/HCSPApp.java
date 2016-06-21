@@ -18,16 +18,18 @@ import org.moeaframework.core.NondominatedPopulation;
 import core.HCSProblem;
 import core.Importer;
 import core.Solution;
+import solvers.SortByExecutionTime;
 import solvers.evolutionary.EvolutionaryHcspBiObjective;
-import solvers.heuristics.MinMinPlus;
+import solvers.heuristics.TPB;
 
 public class HCSPApp {
 
 	public static void main(String[] args) {
 		String fn = "datasets//Braun_et_al//u_s_lolo.0";
+		// String fn = "datasets//Braun_et_al//u_i_hihi.0";
 		HCSPApp app = new HCSPApp();
 		app.simpleTest(fn);
-		app.testBiObjective(fn, "NSGAII", 200000);
+		// app.testBiObjective(fn, "SPEA2", 200000);
 
 	}
 
@@ -38,12 +40,23 @@ public class HCSPApp {
 		HCSProblem problem;
 		try {
 			problem = importer.read_dataset();
-			MinMinPlus solver = new MinMinPlus(problem);
+			// MinMinPlus solver = new MinMinPlus(problem);
+			// MinMin solver = new MinMin(problem);
+			 TPB solver = new TPB(problem);
+			// MET solver = new MET(problem);
+			// MinMax solver = new MinMax(problem);
+//			RandomSolver solver = new RandomSolver(problem);
 			Solution sol = solver.solve();
 			sb.append(String.format("MinMin makespan=%.1f\n", sol.makespan()));
 			sb.append(String.format("MinMin flowtime=%.1f\n", sol.flowTime()));
-			sb.append(String.format("MinMin resourceutilisation=%.1f\n", sol.resourceUtilization()));
-			sb.append(String.format("MinMin matchingproximity=%.1f\n", sol.matchingProximity()));
+			sb.append(String.format("MinMin resourceutilisation=%.4f\n", sol.resourceUtilization()));
+			sb.append(String.format("MinMin matchingproximity=%.4f\n", sol.matchingProximity()));
+			SortByExecutionTime solver2 = new SortByExecutionTime(problem, sol);
+			sol = solver2.solve();
+			sb.append(String.format("MinMin makespan=%.1f\n", sol.makespan()));
+			sb.append(String.format("MinMin flowtime=%.1f\n", sol.flowTime()));
+			sb.append(String.format("MinMin resourceutilisation=%.4f\n", sol.resourceUtilization()));
+			sb.append(String.format("MinMin matchingproximity=%.4f\n", sol.matchingProximity()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

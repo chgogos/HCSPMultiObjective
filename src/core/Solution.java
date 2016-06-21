@@ -49,7 +49,8 @@ public class Solution {
 		for (int p = 0; p < problem.P; p++) {
 			double finishTime = 0.0;
 			for (Integer t : getTasksPerProcessor(p)) {
-				finishTime += problem.etc[t][p];
+				double x = finishTime + problem.etc[t][p];
+				finishTime += x;
 			}
 			sum += finishTime;
 		}
